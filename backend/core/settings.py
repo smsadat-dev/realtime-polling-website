@@ -29,7 +29,10 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+]
 
 
 # Application definition
@@ -80,8 +83,12 @@ ASGI_APPLICATION = 'core.asgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB_NAME'),
+        'USER': os.getenv('POSTGRES_DB_USER'),
+        'PASSWORD': os.getenv('POSTGRES_DB_PASSWORD'),
+        'HOST': os.getenv('POSTGRES_DB_HOST'),
+        'PORT': os.getenv('POSTGRES_PORT'),
     }
 }
 
@@ -120,7 +127,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -131,11 +138,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # CORS configs
 
 CORS_ALLOWED_ORIGINS = [
-
+    'http://localhost:5500',
+    'http://127.0.0.1:5500',
 ]
 
 CORS_TRUSTED_ORIGINS = [
-
+    'http://localhost:5500',
+    'http://127.0.0.1:5500',
 ]
 
 CORS_ALLOW_HEADERS = [
@@ -148,3 +157,38 @@ CORS_ALLOW_HEADERS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+
+
+# Oauth configs
+
+SITE_ID = 1
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP' : {
+            'key': os.getenv("GOOGLE_KEY"),
+            'secret': os.getenv("GOOGLE_SECRET"),
+            'callback_url': None,   
+        },
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'}
+    }
+}
+
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.user_details',
+)
+
+SOCIALACCOUNT_ADAPTER = 'users.adapter.CustomSocialAccountAdapter'
+
+
+SOCIAL_AUTH_GOOGLE_AUTH2_KEY = os.getenv("GOOGLE_KEY")
+SOCIAL_AUTH_GOOGLE_AUTH2_SECRET = os.getenv("GOOGLE_SECRET")
+
+LOGIN_URL = 'http://localhost:5500/login/'
+LOGIN_REDIRECT_URL = "http://localhost:5500/polls/"  # or wherever your SPA lives
+LOGOUT_REDIRECT_URL = "http://localhost:5500/"
