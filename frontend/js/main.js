@@ -1,5 +1,4 @@
 const pollSocket = new WebSocket("ws://127.0.0.1:8000/ws/poll/");
-const createPoll = document.getElementById('create_poll_btn');
 const pollCreationInterface = document.getElementById('pollCreationInterface');
 
 document.addEventListener('DOMContentLoaded', () => {
