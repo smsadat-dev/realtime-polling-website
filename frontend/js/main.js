@@ -1,9 +1,11 @@
 const pollSocket = new WebSocket("ws://127.0.0.1:8000/ws/poll/");
+const createPoll = document.getElementById('create_poll_btn');
+const pollCreationInterface = document.getElementById('pollCreationInterface');
 
 document.addEventListener('DOMContentLoaded', () => {
 
     /* STATE (hide poll result) */
-    manageInterface('block', 'none');
+    manageInterface('block', 'none', 'block');
 
     const pollForm = document.querySelector('#pollInterface form');
 
@@ -23,6 +25,17 @@ document.addEventListener('DOMContentLoaded', () => {
         pollSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             console.log('Server message: ', data);
+            
+            // update poll result
+            const total_votes = data.payload.total_votes;
+
+            data.payload.choices.forEach(choice => {
+                const result = document.getElementById('result' + choice.id);
+                if(result)
+                {
+                    result.value = (choice.votes / total_votes) * 100;  // vote amount in percantage
+                }
+            });
         }
         
         loadPopup('thanksInterface');

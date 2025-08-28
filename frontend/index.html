@@ -7,9 +7,11 @@
 </head>
 <body>
     <main>
+        <button type="submit" id="create_poll_btn">Create poll</button>
+
         <!-- MAIN POLL INTERFACE -->
         <div id="pollInterface">
-
+            
             <h1>Real-time Poll</h1>
             <p>What should be the theme for the next tech meetup?</p>
 
@@ -49,22 +51,22 @@
         <h1>Poll Results</h1>
         <p>Theme for the next tech meetup</p>
 
-        <!-- These numbers are hard-coded (demo). -->
         <section aria-labelledby="results-heading">
             <h2 id="results-heading">Current standings (demo)</h2>
 
-            <p>AI/ML Demos — 42%</p>
-            <progress value="42" max="100">42%</progress>
+            <p>AI/ML Demos</p>
+            <progress id="result1" value="0" max="100"></progress>
 
-            <p>Web3 & Blockchain — 18%</p>
-            <progress value="18" max="100">18%</progress>
+            <p>Web3 & Blockchain</p>
+            <progress id="result2" value="0" max="100"></progress>
 
-            <p>DevOps & Cloud — 25%</p>
-            <progress value="25" max="100">25%</progress>
+            <p>DevOps & Cloud</p>
+            <progress id="result3" value="0" max="100"></progress>
 
-            <p>Systems & Performance — 15%</p>
-            <progress value="15" max="100">15%</progress>
+            <p>Systems & Performance</p>
+            <progress id="result4" value="0" max="100"></progress>
         </section>
+
     </div>
 
     <div id='thanksInterface' style="display: none;">
@@ -72,8 +74,20 @@
         <button>OK</button>
     </div>
 
+    <div id="pollCreationInterface" style="display: none;">
+        <form method="POST" id="pollform">
+            <p><input type="text" name="pollQuestion" id="id_pollQuestion" placeholder="Poll question" required></p>
+            <p><textarea name="pollDetail" id="id_pollDetail" rows="10" cols="45" placeholder="Poll details (optional)"></textarea></p>
+            <p>Poll options</p>
+            <p><input type="text" name="optionForPoll" id="id_optionForPoll"></p>
+            <p><input type="submit" name="addNew" id="id_addNew" value="Add more"></p>
+        </form>
+        <ol id="pollOptionsList"></ol>
+    </div>  
+
     </main>
 
+    <script src="js/createpoll.js"></script>
     <script src="js/interface.js"></script>
     <script src="js/main.js"></script>
     <script src="js/popup.js"></script>

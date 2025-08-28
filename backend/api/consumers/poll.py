@@ -33,16 +33,31 @@ class PollConsumer(AsyncWebsocketConsumer):
         
         data = json.loads(text_data)
         choice_id = data.get('choice_id')
-        
+
         try:
             choice = await database_sync_to_async(Choice.objects.get)(id=choice_id)
             choice.votes += 1
+            poll = await database_sync_to_async(lambda: choice.poll)() 
+            
             await database_sync_to_async(choice.save)()
+            total_votes = await database_sync_to_async(poll.get_total_votes)()
+
+            # prepare vote data for all choices
+            choices_data = await database_sync_to_async(
+                lambda: [
+                    {'id': c.id, 'votes': c.votes}
+                    for c in poll.choices.all()
+            ])()
+
             
         except Choice.DoesNotExist:
             await self.send(text_data=json.dumps({'type': 'error', 'payload': 'Choice not found'}))
             return
 
-        new_result = {'choice': choice.option, 'vote': choice.votes}
+        new_result = {
+            'choices': choices_data, 
+            'total_votes': total_votes,
+        }
+
         # Return JSON response
         await self.send(text_data=json.dumps({'type': '', 'payload': new_result}))
