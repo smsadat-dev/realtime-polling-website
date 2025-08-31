@@ -76,17 +76,33 @@
 
     <div id="pollCreationInterface" style="display: none;">
         <form id="pollform">
-            <p><input type="text" name="pollQuestion" id="id_pollQuestion" placeholder="Poll question" required></p>
-            <p><textarea name="pollDetail" id="id_pollDetail" rows="10" cols="45" placeholder="Poll details (optional)"></textarea></p>
-            <p>Poll options</p>
-            <p><input type="text" name="optionForPoll" id="id_optionForPoll"></p>
-            <p><input type="submit" name="addNew" id="id_addNew" value="Add more"></p>
+            <p>
+                <label for="id_pollQuestion">Poll question:</label>
+                <input type="text" name="pollQuestion" id="id_pollQuestion" placeholder="Poll question" required>
+            </p>
+            <p>
+                <label for="id_pollDetail">Poll details:</label>
+                <textarea name="pollDetail" id="id_pollDetail" rows="10" cols="45" placeholder="Poll details (optional)"></textarea>
+            </p>
+            <p>
+                <label for="id_intervalForPoll">Poll interval:</label>
+                <input type="text" name="intervalForPoll" id="id_intervalForPoll">
+            </p>
+            
+            <p>Poll options:</p>
+            <div id="optionsContainer"></div> <!-- options will go here -->
+            
+            <p><input type="button" name="addNew" id="id_addNew" value="Add more options"></p>
+            <p><input type="submit" name="submitpoll" id="id_submitpoll" value="Submit"></p>
         </form>
-        <ol id="pollOptionsList"></ol>
     </div>  
 
     </main>
 
+    <script>
+        const pollSocket = new WebSocket("ws://127.0.0.1:8000/ws/poll/");
+    </script>
+    
     <script src="js/createpoll.js"></script>
     <script src="js/interface.js"></script>
     <script src="js/main.js"></script>

@@ -1,4 +1,4 @@
-const pollSocket = new WebSocket("ws://127.0.0.1:8000/ws/poll/");
+// const pollSocket = new WebSocket("ws://127.0.0.1:8000/ws/poll/");
 const pollCreationInterface = document.getElementById('pollCreationInterface');
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -30,9 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             data.payload.choices.forEach(choice => {
                 const result = document.getElementById('result' + choice.id);
+                console.log("Total votes: "+ total_votes); 
                 if(result)
                 {
                     result.value = (choice.votes / total_votes) * 100;  // vote amount in percantage
+                    console.log("Option " + choice.id + ": " + choice.votes);
                 }
             });
         }

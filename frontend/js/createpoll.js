@@ -1,41 +1,72 @@
-const createPoll = document.getElementById('create_poll_btn');
+let optCount = 0;
+const MAXOPT = 10;
 
-createPoll.addEventListener('click', () => {
+function addPollOptions(optionsContainer)
+{
+    if(optCount > MAXOPT)
+    {
+        console.log("Maximum 10 options allowed");
+        return;
+    }
 
+    const p = document.createElement('p');
+
+    // Create input
+    optCount++;
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.name = 'optionForPoll';
+    input.id = `id_optionForPoll${optCount}`;
+    input.placeholder = 'Enter poll option: ';
+
+    p.appendChild(input);
+
+    optionsContainer.appendChild(p);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    
+    const createPoll = document.getElementById('create_poll_btn');
 
     /* LOAD POLL CREATION PAGE */
     
-    manageInterface('none', 'none', 'none');
-    pollCreationInterface.style.display = 'block';
-
-    const pollForm = document.getElementById('pollForm');
-    const optionInput = document.getElementById('id_optionForPoll');
-    const optionsList = document.getElementById('pollOptionsList');
-
-    let optCount = 0;
-    const MAXOPT = 10;
-
-    pollForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const value = optionInput.value.trim();
-
-        if(!value)
-        {
-            return alert('Enter valid input');
-        }
+    createPoll.addEventListener('click', () => {
         
-        if (optCount > MAXOPT)
-        {
-            return alert('Max 10 options allowed');
-        }
-        optCount++;
+        manageInterface('none', 'none', 'none');
+        pollCreationInterface.style.display = 'block';
 
-        // Add options to list
-        const li  = document.createElement('li');
-        li.textContent = value;
-        optionsList.appendChild(li);
+        const pollForm = document.querySelector('#pollInterface form');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const addpoll = document.getElementById('id_addNew');
 
-        optionInput.value = '';     // clear input
-    })    
+        addpoll.addEventListener('click', (e) => {
+            e.preventDefault();
+            addPollOptions(optionsContainer);
+        });
+
+        pollForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const question = document.getElementById('id_pollQuestion').value.trim; 
+            const details = document.getElementById('id_pollDetail').value.trim; 
+            const options = Array.from(optionsList.children).map(li => li.textContent); 
+            const interval = document.getElementById('id_intervalForPoll').value.trim; 
+
+            // Send JSON to backend 
+            fetch('http://127.0.0.1:8000/api/', {
+                method: 'POST',
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    'poll_question': question,
+                    'poll_details': details,
+                    'poll_options': options,
+                    'poll_interval': interval,
+                }),
+            });       
+
+            console.log({question, details, options, interval});
+        });
+
+    });
+
 });
